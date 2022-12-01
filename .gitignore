@@ -43,3 +43,6 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+
+# Ignore rust builds
+target/
