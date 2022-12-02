@@ -19,16 +19,6 @@ public class DayTwo {
 			this.value = value;
 		}
 
-		public int beats(RPS other) {
-			if (this.equals(other)) {
-				return 0;
-			}
-			if (this.winsFrom().equals(other)) {
-				return 1;
-			}
-			return -1;
-		}
-
 		public RPS losesFrom() {
 			switch (this) {
 			case ROCK: return PAPER;
@@ -68,18 +58,12 @@ public class DayTwo {
 			RPS otherPlayer = parsePlayerOne.apply(split[0]);
 			RPS me = parsePlayerTwo.apply(split[1], otherPlayer);
 
-			switch (me.beats(otherPlayer)) {
-			case -1: //lose
-				score += me.value;
-				break;
-			case 0: //draw
+			if (me.equals(otherPlayer)) { //draw
 				score += me.value + 3;
-				break;
-			case 1: //win
+			} else if (me.winsFrom().equals(otherPlayer)) { //win
 				score += me.value + 6;
-				break;
-			default:
-				throw new IllegalArgumentException("Impossible value");
+			} else { //lose
+				score += me.value;
 			}
 		}
 
@@ -112,5 +96,4 @@ public class DayTwo {
 		default: throw new IllegalArgumentException("Unknown value " + letter);
 		}
 	}
-
 }
