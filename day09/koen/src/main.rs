@@ -3,19 +3,16 @@ use std::iter;
 use std::vec::Vec;
 
 fn main() {
-
-    // let path = String::from("data/input_test.txt");
+    let path = String::from("data/input_test.txt");
     // let path = String::from("data/input_test2.txt");
-    let path = String::from("data/input.txt");
-    
+    // let path = String::from("data/input.txt");
     let moves = parse_moves(&path);
 
-    let unique_visits = part1(&moves);
+    let unique_visits = part2(&moves, 2);
     println!("unique visits: {:?}", unique_visits);
 
     let unique_rope_visits = part2(&moves, 10);
     println!("unique visits: {:?}", unique_rope_visits);
-
 }
 
 fn parse_moves(path: &str) -> Vec<[i32; 2]> {
@@ -35,31 +32,6 @@ fn parse_moves(path: &str) -> Vec<[i32; 2]> {
         moves.append(&mut motion);
     }
     moves
-}
-
-fn part1(moves: &Vec<[i32; 2]>) -> usize {
-    let mut head: [i32; 2] = [0, 0];
-    let mut tail: [i32; 2] = [0, 0];
-    let mut visited: Vec<[i32; 2]> = vec![];
-    visited.push(tail);
-    for motion in moves {
-        // println!("moving {:?}", motion);
-        head = do_move(head, &motion);
-        // println!("  new head {:?}", head);
-        let touching = get_touching(tail);
-        // println!("  touching {:?}", touching);
-        if !touching.contains(&head) {
-            tail = move_tail(tail, head);
-            // println!("  new tail {:?}", tail);
-            visited.push(tail);
-        }
-    }
-
-    // println!("visited: {:?}", visited);
-    visited.sort();
-    visited.dedup();
-    // println!("unique visited: {:?}", visited);
-    visited.len()
 }
 
 fn part2(moves: &Vec<[i32; 2]>, size: usize) -> usize {
