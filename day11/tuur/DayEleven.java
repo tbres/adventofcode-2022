@@ -27,13 +27,12 @@ public class DayEleven {
 		System.out.println("Part 2: " + shenanigans(monkies, 10_000, i -> i % lcm));
 	}
 
-	private static BigInteger shenanigans(List<Monkey> monkies, int rounds, Function<Long, Long> worryFunction) {
+	private static BigInteger shenanigans(List<Monkey> monkies, int rounds, Function<Long, Long> worryReduction) {
 		for (int round = 1; round <= rounds; round++) {
-			for (int i = 0; i < monkies.size(); i++) {
-				Monkey monkey = monkies.get(i);
+			for (Monkey monkey : monkies) {
 				for (long item : monkey.items) {
-					long newItem = monkey.calculateWorryLevel(item);
-					newItem = worryFunction.apply(newItem);
+					long newItem = monkey.increaseWorryLevel(item);
+					newItem = worryReduction.apply(newItem);
 					if (newItem % monkey.test == 0l) {
 						monkies.get(monkey.ifTrue).items.add(newItem);
 					} else {
@@ -87,7 +86,7 @@ public class DayEleven {
 		private Integer ifTrue, ifFalse;
 		private int inspectionCount = 0;
 
-		private long calculateWorryLevel(long currentLevel) {
+		private long increaseWorryLevel(long currentLevel) {
 			long other = "old".equals(operand) ? currentLevel : Long.parseLong(operand);
 			if ("*".equals(operator)) {
 				return currentLevel * other;
