@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class DayTwelve {
@@ -14,12 +15,9 @@ public class DayTwelve {
 	public static void main(String[] args) throws Exception {
 		List<String> lines = Files.readAllLines(Paths.get(DayTwelve.class.getResource("input-day12.txt").toURI()));
 
-		Path bestPath = part1(parseMap(lines));
-		
-		
-		System.out.println("Part 1: " + bestPath);
+		System.out.println("Part 1: " + part1(parseMap(lines)));
 
-		System.out.println("Part 2: ");
+		System.out.println("Part 2: " + part2(parseMap(lines)));
 
 	}
 
@@ -58,7 +56,70 @@ public class DayTwelve {
 
 		}
 		
+		System.out.println("Visited count " + visited.size());
+		
 		return bestPath;
+	}
+	
+	private static int part2(World world) {
+//		System.out.println("start " + world.start);
+//		System.out.println("end " + world.start);
+		
+		Map<Coord, Integer> distance = new HashMap<>();
+		
+		Map<Coord, Path> visited = new HashMap<>();
+		
+		Path path = new Path(null, world.start, world.map);
+		visited.put(path.coord, path);
+		
+		while (path != null && path.hasOptions()) {
+			Path nextpath = path.nextOption(world.map);
+			// System.out.println(" " + nextpath.coord + " -> " + world.map.get(nextpath.coord) + " (" + nextpath.length + ")");
+			
+			if (!visited.containsKey(nextpath.coord) || visited.get(nextpath.coord).length > nextpath.length) {
+				visited.put(nextpath.coord, nextpath);
+				if (nextpath.coord.equals(world.end)) {
+//					System.out.println("Goal" + nextpath.coord);
+					updateDistances(distance, nextpath);
+				} else {
+					path = nextpath;
+				}
+			}
+			
+			while (!path.hasOptions() && path.previous != null) {
+				// System.out.println("backtrack" + path.previous.coord);
+				path = path.previous; // backtracks
+			}
+			
+		}
+		
+		int best = Integer.MAX_VALUE;
+		for(Entry<Coord, Character> entry : world.map.entrySet()) {
+			if(entry.getValue() == 'a') {
+				Integer dist = distance.get(entry.getKey());
+				if(dist == null) {
+//					System.out.println(" - Missing: " + entry.getKey());
+				} else {
+					best = Math.min(best, dist);
+				}
+			}
+		}
+		
+		return best;
+	}
+	
+	
+
+	private static void updateDistances(Map<Coord, Integer> distances, Path nextpath) {
+		
+		Path current = nextpath;
+		int dist = 0;
+		while (current.previous != null) {
+			current = current.previous;
+			dist++;
+			distances.merge(current.coord, dist, (x, y) -> Math.min(x, y));
+		}
+		
 	}
 
 	private static World parseMap(List<String> lines) {
