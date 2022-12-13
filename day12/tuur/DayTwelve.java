@@ -22,9 +22,6 @@ public class DayTwelve {
 	}
 
 	private static Path part1(World world) {
-		System.out.println("start " + world.start);
-		System.out.println("end " + world.start);
-
 		Map<Coord, Path> visited = new HashMap<>();
 
 		Path path = new Path(null, world.start, world.map);
@@ -39,9 +36,7 @@ public class DayTwelve {
 			if (!visited.containsKey(nextpath.coord) || visited.get(nextpath.coord).length > nextpath.length) {
 				visited.put(nextpath.coord, nextpath);
 				if (nextpath.coord.equals(world.end)) {
-					System.out.println("Goal" + nextpath.coord);
 					if (bestPath == null || bestPath.length > nextpath.length) {
-						System.out.println("best!");
 						bestPath = nextpath;
 					}
 				} else {
@@ -53,17 +48,14 @@ public class DayTwelve {
 				// System.out.println("backtrack" + path.previous.coord);
 				path = path.previous; // backtracks
 			}
-
 		}
 		
-		System.out.println("Visited count " + visited.size());
+		System.out.println("Visited count " + visited.size() + " / " + world.map.size());
 		
 		return bestPath;
 	}
 	
 	private static int part2(World world) {
-//		System.out.println("start " + world.start);
-//		System.out.println("end " + world.start);
 		
 		Map<Coord, Integer> distance = new HashMap<>();
 		
@@ -74,12 +66,10 @@ public class DayTwelve {
 		
 		while (path != null && path.hasOptions()) {
 			Path nextpath = path.nextOption(world.map);
-			// System.out.println(" " + nextpath.coord + " -> " + world.map.get(nextpath.coord) + " (" + nextpath.length + ")");
-			
+
 			if (!visited.containsKey(nextpath.coord) || visited.get(nextpath.coord).length > nextpath.length) {
 				visited.put(nextpath.coord, nextpath);
 				if (nextpath.coord.equals(world.end)) {
-//					System.out.println("Goal" + nextpath.coord);
 					updateDistances(distance, nextpath);
 				} else {
 					path = nextpath;
@@ -87,19 +77,15 @@ public class DayTwelve {
 			}
 			
 			while (!path.hasOptions() && path.previous != null) {
-				// System.out.println("backtrack" + path.previous.coord);
 				path = path.previous; // backtracks
 			}
-			
 		}
 		
 		int best = Integer.MAX_VALUE;
 		for(Entry<Coord, Character> entry : world.map.entrySet()) {
 			if(entry.getValue() == 'a') {
 				Integer dist = distance.get(entry.getKey());
-				if(dist == null) {
-//					System.out.println(" - Missing: " + entry.getKey());
-				} else {
+				if(dist != null) {
 					best = Math.min(best, dist);
 				}
 			}
@@ -111,7 +97,6 @@ public class DayTwelve {
 	
 
 	private static void updateDistances(Map<Coord, Integer> distances, Path nextpath) {
-		
 		Path current = nextpath;
 		int dist = 0;
 		while (current.previous != null) {
@@ -119,7 +104,6 @@ public class DayTwelve {
 			dist++;
 			distances.merge(current.coord, dist, (x, y) -> Math.min(x, y));
 		}
-		
 	}
 
 	private static World parseMap(List<String> lines) {
