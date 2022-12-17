@@ -25,6 +25,7 @@ fn main() {
         vertices: floor
     };
     chamber.drop_rocks(2022);
+    // chamber.print();
     println!("{}", chamber.get_max_height());
 }
 
@@ -99,18 +100,23 @@ impl Chamber<'_> {
         let vertices = self.shapes.next().unwrap();
         let mut shape = Shape{vertices: vertices.to_vec()};
         shape.set_origin([0, height]);
+        // self.print_move(&shape.vertices);
         loop {
             let jet = self.jets.next().unwrap();
             let new_vertices = shape.do_move(jet);
             if self.check_walls(&new_vertices) && !self.check_rocks(&new_vertices) {
                 shape.set_shape(new_vertices);
             }
+            // println!("move {}", jet);
+            // self.print_move(&shape.vertices);
             let new_vertices = shape.down();
             if self.check_rocks(&new_vertices) {
                 self.vertices.append(&mut shape.vertices);
                 break;
             }
             shape.set_shape(new_vertices);
+            // println!("move down");
+            // self.print_move(&shape.vertices);
         }
     }
 
@@ -118,6 +124,45 @@ impl Chamber<'_> {
         for _i in 0..n {
             self.drop_rock();
         }
+    }
+
+    fn print_move(&self, vertices: &Vec<Coord>) {
+        let height = self.get_max_height() + 4;
+        for i in (1..height+1).rev() {
+            let mut line = String::from("");
+            for j in self.left_wall + 1..self.right_wall {
+                let mut c = match self.vertices.contains(&[j, i]) {
+                    true => '#',
+                    false => '.'
+                };
+                if c == '.' {
+                    c = match vertices.contains(&[j, i]) {
+                        true => '@',
+                        false => '.'
+                    };
+                }
+                line.push(c);
+            }
+            println!("|{}|", line);
+        }
+        println!("+-------+");
+        println!();
+    }
+
+    fn print(&self) {
+        let height = self.get_max_height();
+        for i in (1..height+1).rev() {
+            let mut line = String::from("");
+            for j in self.left_wall + 1..self.right_wall {
+                let c = match self.vertices.contains(&[j, i]) {
+                    true => '#',
+                    false => '.'
+                };
+                line.push(c);
+            }
+            println!("|{}|", line);
+        }
+        println!("+-------+");
     }
 
 }
