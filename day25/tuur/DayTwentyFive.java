@@ -2,29 +2,17 @@ package tuur;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DayTwentyFive {
 	
 	public static void main(String[] args) throws Exception {
-		List<String> test = Files.readAllLines(Paths.get(DayTwentyFive.class.getResource("test-input-day25.txt").toURI()));
 		List<String> input = Files.readAllLines(Paths.get(DayTwentyFive.class.getResource("input-day25.txt").toURI()));
 
-		System.out.println("Expected: 10, actual: " + decode("20"));
-		System.out.println("Expected: 8, actual: " + decode("2="));
-		System.out.println("Expected: 976, actual: " + decode("2=-01"));
+		long sum = input.stream().collect(Collectors.summingLong(DayTwentyFive::decode));
 		
-		System.out.println("Expected: 1=-0-2, actual: " + encode(1747l));
-		
-		
-		long sum = 0l;
-		for(String line: input) {
-			long decode = decode(line);
-			sum += decode;
-		}
-		System.out.println("Sum : " + sum);
+		System.out.println("Sum: " + sum);
 		System.out.println("Encoded: " + encode(sum));
 	}
 	
