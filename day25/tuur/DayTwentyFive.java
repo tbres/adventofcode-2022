@@ -29,7 +29,7 @@ public class DayTwentyFive {
 				value += 1l;
 				sb.insert(0, '=');
 			} else {
-				sb.insert(0, Long.toString(remainder).toCharArray()[0]);
+				sb.insert(0, remainder);
 			}
 		}
 		return sb.toString();
