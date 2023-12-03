@@ -38,7 +38,7 @@ public class DayFourteen {
 					break;
 				}
 				if (sand.y > world.maxY) {
-					return count; // sand flow out the bottom, falling into the endless void
+					return count; // sand flows out the bottom, falling into the endless void
 				}
 			}
 		}
