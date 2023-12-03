@@ -6,8 +6,8 @@ use std::vec::IntoIter;
 type Coord = [i32; 2];
 
 fn main() {
-    let path = String::from("data/input.txt");
-    // let path = String::from("data/input_test.txt");
+    // let path = String::from("data/input.txt");
+    let path = String::from("data/input_test.txt");
     let text = fs::read_to_string(path).expect("Error reading the file");
     
     let jets = text.chars().cycle();
@@ -24,7 +24,11 @@ fn main() {
         shapes: shapes,
         vertices: floor
     };
-    chamber.drop_rocks(2022);
+    let njets = text.len();
+    let ncycles = 1000000000000 / njets;
+    let remaining = 1000000000000 % njets;
+    println!("cycle: {}, ncycles: {}, remaning: {}", njets, ncycles, remaining);
+    chamber.drop_rocks(10);
     // chamber.print();
     println!("{}", chamber.get_max_height());
 }
